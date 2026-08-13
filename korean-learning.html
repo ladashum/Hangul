@@ -1,0 +1,795 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Изучение корейского — Хангыль</title>
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --card: #1a1a22;
+      --accent: #ff6b9d;
+      --accent2: #7c5cff;
+      --text: #e8e8ed;
+      --muted: #9898a6;
+      --border: #2a2a35;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 16px 60px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 40px;
+      padding-top: 20px;
+    }
+
+    header h1 {
+      font-size: 2rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: var(--muted);
+      font-size: 1rem;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-top: 18px;
+    }
+
+    .speed-control, .voice-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .speed-control label,
+    .voice-control label {
+      color: var(--muted);
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .speed-control input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 160px;
+      height: 6px;
+      background: var(--border);
+      border-radius: 999px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .speed-control input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      cursor: pointer;
+      border: none;
+      box-shadow: 0 0 8px rgba(255, 107, 157, 0.4);
+    }
+
+    .speed-control input[type="range"]::-moz-range-thumb {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      cursor: pointer;
+      border: none;
+    }
+
+    .speed-value {
+      min-width: 42px;
+      text-align: center;
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.95rem;
+    }
+
+    .voice-control select {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      max-width: 260px;
+      outline: none;
+    }
+
+    .voice-control select:hover,
+    .voice-control select:focus {
+      border-color: var(--accent);
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+
+    nav button {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 18px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s;
+    }
+
+    nav button:hover,
+    nav button.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-color: transparent;
+      color: white;
+    }
+
+    section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    section.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+      color: var(--accent);
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 20px;
+    }
+
+    /* Hangul grid */
+    .hangul-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .hangul-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .hangul-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .hangul-card .char {
+      font-size: 2rem;
+      font-weight: 600;
+      display: block;
+      margin-bottom: 4px;
+    }
+
+    .hangul-card .roman {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .hangul-card .name {
+      font-size: 0.75rem;
+      color: var(--accent);
+      margin-top: 2px;
+    }
+
+    /* Words */
+    .word-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .word-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: center;
+      transition: border-color 0.2s;
+    }
+
+    .word-item:hover {
+      border-color: var(--accent2);
+    }
+
+    .word-ko {
+      font-size: 1.35rem;
+      font-weight: 600;
+    }
+
+    .word-rom {
+      color: var(--muted);
+      font-size: 0.95rem;
+    }
+
+    .word-ru {
+      color: var(--text);
+    }
+
+    .speak-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .speak-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    /* Quiz */
+    .quiz-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 28px 20px;
+      text-align: center;
+    }
+
+    .quiz-char {
+      font-size: 4.5rem;
+      font-weight: 700;
+      margin: 16px 0 24px;
+      color: var(--accent);
+    }
+
+    .quiz-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      max-width: 360px;
+      margin: 0 auto 20px;
+    }
+
+    .quiz-options button {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    .quiz-options button:hover {
+      border-color: var(--accent2);
+    }
+
+    .quiz-options button.correct {
+      background: #1a3a2a;
+      border-color: #2ecc71;
+      color: #2ecc71;
+    }
+
+    .quiz-options button.wrong {
+      background: #3a1a1a;
+      border-color: #e74c3c;
+      color: #e74c3c;
+    }
+
+    .quiz-score {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 16px;
+    }
+
+    .next-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      color: white;
+      padding: 12px 28px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      margin-top: 8px;
+      display: none;
+    }
+
+    .next-btn.show {
+      display: inline-block;
+    }
+
+    /* Phrases */
+    .phrase-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .phrase-ko {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .phrase-rom {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+
+    .phrase-ru {
+      color: var(--text);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 50px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    @media (max-width: 600px) {
+      .word-item {
+        grid-template-columns: 1fr 1fr;
+        gap: 6px;
+      }
+      .word-item .speak-btn {
+        grid-column: 2;
+        justify-self: end;
+      }
+      .quiz-options {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>한국어 배우기</h1>
+      <p>Простое изучение корейского языка</p>
+      <div class="controls">
+        <div class="speed-control">
+          <label for="speedSlider">Скорость</label>
+          <input type="range" id="speedSlider" min="0.5" max="1.5" step="0.05" value="0.85">
+          <span class="speed-value" id="speedValue">0.85×</span>
+        </div>
+        <div class="voice-control">
+          <label for="voiceSelect">Голос</label>
+          <select id="voiceSelect">
+            <option value="">Загрузка голосов...</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <nav>
+      <button class="active" data-tab="hangul">Хангыль</button>
+      <button data-tab="words">Слова</button>
+      <button data-tab="phrases">Фразы</button>
+      <button data-tab="quiz">Тренажёр</button>
+    </nav>
+
+    <!-- Хангыль -->
+    <section id="hangul" class="active">
+      <h2>Согласные (자음)</h2>
+      <p class="hint">Нажми на букву, чтобы услышать произношение</p>
+      <div class="hangul-grid" id="consonants"></div>
+
+      <h2>Гласные (모음)</h2>
+      <div class="hangul-grid" id="vowels"></div>
+    </section>
+
+    <!-- Слова -->
+    <section id="words">
+      <h2>Базовые слова</h2>
+      <p class="hint">Нажми 🔊 чтобы прослушать</p>
+      <div class="word-list" id="wordList"></div>
+    </section>
+
+    <!-- Фразы -->
+    <section id="phrases">
+      <h2>Полезные фразы</h2>
+      <div id="phraseList"></div>
+    </section>
+
+    <!-- Тренажёр -->
+    <section id="quiz">
+      <h2>Тренажёр хангыля</h2>
+      <p class="hint">Выбери правильное произношение</p>
+      <div class="quiz-box">
+        <div class="quiz-score">Счёт: <span id="score">0</span> / <span id="total">0</span></div>
+        <div class="quiz-char" id="quizChar">가</div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <button class="next-btn" id="nextBtn">Следующий →</button>
+      </div>
+    </section>
+
+    <footer>
+      Сделано для быстрого старта · Используй кнопки навигации сверху
+    </footer>
+  </div>
+
+  <script>
+    // Данные
+    const consonants = [
+      { char: 'ㄱ', roman: 'g/k', name: '기역' },
+      { char: 'ㄴ', roman: 'n', name: '니은' },
+      { char: 'ㄷ', roman: 'd/t', name: '디귿' },
+      { char: 'ㄹ', roman: 'r/l', name: '리을' },
+      { char: 'ㅁ', roman: 'm', name: '미음' },
+      { char: 'ㅂ', roman: 'b/p', name: '비읍' },
+      { char: 'ㅅ', roman: 's', name: '시옷' },
+      { char: 'ㅇ', roman: 'ng/-', name: '이응' },
+      { char: 'ㅈ', roman: 'j', name: '지읒' },
+      { char: 'ㅊ', roman: 'ch', name: '치읓' },
+      { char: 'ㅋ', roman: 'k', name: '키읔' },
+      { char: 'ㅌ', roman: 't', name: '티읕' },
+      { char: 'ㅍ', roman: 'p', name: '피읖' },
+      { char: 'ㅎ', roman: 'h', name: '히읗' },
+      { char: 'ㄲ', roman: 'kk', name: '쌍기역' },
+      { char: 'ㄸ', roman: 'tt', name: '쌍디귿' },
+      { char: 'ㅃ', roman: 'pp', name: '쌍비읍' },
+      { char: 'ㅆ', roman: 'ss', name: '쌍시옷' },
+      { char: 'ㅉ', roman: 'jj', name: '쌍지읒' },
+    ];
+
+    const vowels = [
+      { char: 'ㅏ', roman: 'a', name: '아' },
+      { char: 'ㅑ', roman: 'ya', name: '야' },
+      { char: 'ㅓ', roman: 'eo', name: '어' },
+      { char: 'ㅕ', roman: 'yeo', name: '여' },
+      { char: 'ㅗ', roman: 'o', name: '오' },
+      { char: 'ㅛ', roman: 'yo', name: '요' },
+      { char: 'ㅜ', roman: 'u', name: '우' },
+      { char: 'ㅠ', roman: 'yu', name: '유' },
+      { char: 'ㅡ', roman: 'eu', name: '으' },
+      { char: 'ㅣ', roman: 'i', name: '이' },
+      { char: 'ㅐ', roman: 'ae', name: '애' },
+      { char: 'ㅔ', roman: 'e', name: '에' },
+      { char: 'ㅒ', roman: 'yae', name: '얘' },
+      { char: 'ㅖ', roman: 'ye', name: '예' },
+      { char: 'ㅘ', roman: 'wa', name: '와' },
+      { char: 'ㅙ', roman: 'wae', name: '왜' },
+      { char: 'ㅚ', roman: 'oe', name: '외' },
+      { char: 'ㅝ', roman: 'wo', name: '워' },
+      { char: 'ㅞ', roman: 'we', name: '웨' },
+      { char: 'ㅟ', roman: 'wi', name: '위' },
+      { char: 'ㅢ', roman: 'ui', name: '의' },
+    ];
+
+    const words = [
+      { ko: '안녕하세요', roman: 'annyeonghaseyo', ru: 'Здравствуйте' },
+      { ko: '감사합니다', roman: 'gamsahamnida', ru: 'Спасибо' },
+      { ko: '네', roman: 'ne', ru: 'Да' },
+      { ko: '아니요', roman: 'aniyo', ru: 'Нет' },
+      { ko: '사랑해요', roman: 'saranghaeyo', ru: 'Я тебя люблю' },
+      { ko: '물', roman: 'mul', ru: 'Вода' },
+      { ko: '밥', roman: 'bap', ru: 'Рис / еда' },
+      { ko: '친구', roman: 'chingu', ru: 'Друг' },
+      { ko: '학교', roman: 'hakgyo', ru: 'Школа' },
+      { ko: '집', roman: 'jip', ru: 'Дом' },
+      { ko: '한국', roman: 'hanguk', ru: 'Корея' },
+      { ko: '이름', roman: 'ireum', ru: 'Имя' },
+      { ko: '뭐예요?', roman: 'mwoyeyo?', ru: 'Что это?' },
+      { ko: '좋아요', roman: 'joayo', ru: 'Хорошо / нравится' },
+      { ko: '미안해요', roman: 'mianhaeyo', ru: 'Извините' },
+    ];
+
+    const phrases = [
+      { ko: '만나서 반가워요', roman: 'mannaseo bangawoyo', ru: 'Приятно познакомиться' },
+      { ko: '이름이 뭐예요?', roman: 'ireumi mwoyeyo?', ru: 'Как вас зовут?' },
+      { ko: '저는 ...이에요/예요', roman: 'jeoneun ...ieyo/yeyo', ru: 'Меня зовут ...' },
+      { ko: '어디 가요?', roman: 'eodi gayo?', ru: 'Куда идёте?' },
+      { ko: '얼마예요?', roman: 'eolmayeyo?', ru: 'Сколько стоит?' },
+      { ko: '맛있어요!', roman: 'masisseoyo!', ru: 'Вкусно!' },
+      { ko: '도와주세요', roman: 'dowajuseyo', ru: 'Помогите, пожалуйста' },
+      { ko: '화장실 어디예요?', roman: 'hwajangsil eodiyeyo?', ru: 'Где туалет?' },
+      { ko: '천천히 말해주세요', roman: 'cheoncheonhi malhaejuseyo', ru: 'Говорите, пожалуйста, медленнее' },
+      { ko: '잘 먹겠습니다', roman: 'jal meokgetseumnida', ru: 'Приятного аппетита (перед едой)' },
+    ];
+
+    // Слоги для тренажёра
+    const syllables = [
+      { char: '가', roman: 'ga' }, { char: '나', roman: 'na' }, { char: '다', roman: 'da' },
+      { char: '라', roman: 'ra' }, { char: '마', roman: 'ma' }, { char: '바', roman: 'ba' },
+      { char: '사', roman: 'sa' }, { char: '아', roman: 'a' }, { char: '자', roman: 'ja' },
+      { char: '하', roman: 'ha' }, { char: '고', roman: 'go' }, { char: '노', roman: 'no' },
+      { char: '도', roman: 'do' }, { char: '로', roman: 'ro' }, { char: '모', roman: 'mo' },
+      { char: '보', roman: 'bo' }, { char: '소', roman: 'so' }, { char: '오', roman: 'o' },
+      { char: '조', roman: 'jo' }, { char: '호', roman: 'ho' }, { char: '구', roman: 'gu' },
+      { char: '누', roman: 'nu' }, { char: '두', roman: 'du' }, { char: '루', roman: 'ru' },
+      { char: '무', roman: 'mu' }, { char: '부', roman: 'bu' }, { char: '수', roman: 'su' },
+      { char: '우', roman: 'u' }, { char: '주', roman: 'ju' }, { char: '후', roman: 'hu' },
+      { char: '기', roman: 'gi' }, { char: '니', roman: 'ni' }, { char: '디', roman: 'di' },
+      { char: '리', roman: 'ri' }, { char: '미', roman: 'mi' }, { char: '비', roman: 'bi' },
+      { char: '시', roman: 'si' }, { char: '이', roman: 'i' }, { char: '지', roman: 'ji' },
+      { char: '히', roman: 'hi' }, { char: '개', roman: 'gae' }, { char: '네', roman: 'ne' },
+      { char: '데', roman: 'de' }, { char: '레', roman: 're' }, { char: '메', roman: 'me' },
+      { char: '베', roman: 'be' }, { char: '세', roman: 'se' }, { char: '에', roman: 'e' },
+    ];
+
+    // Речь
+    let speechRate = 0.85;
+    let selectedVoice = null;
+    let selectedEnVoice = null;
+
+    function speak(text, lang = 'ko-KR') {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang;
+      u.rate = speechRate;
+      if (lang.startsWith('ko') && selectedVoice) {
+        u.voice = selectedVoice;
+      } else if (lang.startsWith('en') && selectedEnVoice) {
+        u.voice = selectedEnVoice;
+      }
+      window.speechSynthesis.speak(u);
+    }
+
+    // Озвучка буквы: сначала корейское название, потом английская транскрипция
+    function speakLetter(name, roman) {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+
+      const ko = new SpeechSynthesisUtterance(name);
+      ko.lang = 'ko-KR';
+      ko.rate = speechRate;
+      if (selectedVoice) ko.voice = selectedVoice;
+
+      const en = new SpeechSynthesisUtterance(roman);
+      en.lang = 'en-US';
+      en.rate = speechRate;
+      if (selectedEnVoice) en.voice = selectedEnVoice;
+
+      ko.onend = () => window.speechSynthesis.speak(en);
+      window.speechSynthesis.speak(ko);
+    }
+
+    // Выбор голоса
+    const voiceSelect = document.getElementById('voiceSelect');
+
+    function loadVoices() {
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices.length) return;
+
+      // Корейские голоса в приоритете
+      const koVoices = voices.filter(v => v.lang.startsWith('ko'));
+      const enVoices = voices.filter(v => v.lang.startsWith('en'));
+
+      // Предпочитаем Google / Microsoft / качественные
+      const preferred = koVoices.sort((a, b) => {
+        const score = (v) => {
+          const n = v.name.toLowerCase();
+          if (n.includes('google')) return 3;
+          if (n.includes('microsoft') || n.includes('heami') || n.includes('sunhi')) return 2;
+          if (n.includes('premium') || n.includes('enhanced')) return 1;
+          return 0;
+        };
+        return score(b) - score(a);
+      });
+
+      voiceSelect.innerHTML = '';
+
+      if (preferred.length === 0) {
+        voiceSelect.innerHTML = '<option value="">Корейский голос не найден</option>';
+      } else {
+        preferred.forEach((v, i) => {
+          const opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = `${v.name} (${v.lang})`;
+          voiceSelect.appendChild(opt);
+        });
+        selectedVoice = preferred[0];
+        voiceSelect.value = 0;
+      }
+
+      // Английский голос для транскрипции
+      selectedEnVoice = enVoices.find(v => v.name.toLowerCase().includes('google')) 
+                     || enVoices.find(v => v.lang === 'en-US') 
+                     || enVoices[0] 
+                     || null;
+    }
+
+    // Голоса загружаются асинхронно
+    if (window.speechSynthesis) {
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    voiceSelect.addEventListener('change', () => {
+      const voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('ko'));
+      const sorted = voices.sort((a, b) => {
+        const score = (v) => {
+          const n = v.name.toLowerCase();
+          if (n.includes('google')) return 3;
+          if (n.includes('microsoft') || n.includes('heami') || n.includes('sunhi')) return 2;
+          return 0;
+        };
+        return score(b) - score(a);
+      });
+      selectedVoice = sorted[voiceSelect.value] || sorted[0];
+    });
+
+    // Ползунок скорости
+    const speedSlider = document.getElementById('speedSlider');
+    const speedValue = document.getElementById('speedValue');
+
+    speedSlider.addEventListener('input', () => {
+      speechRate = parseFloat(speedSlider.value);
+      speedValue.textContent = speechRate.toFixed(2) + '×';
+    });
+
+    // Рендер хангыля
+    function renderHangul(containerId, data) {
+      const el = document.getElementById(containerId);
+      el.innerHTML = data.map(item => `
+        <div class="hangul-card" onclick="speakLetter('${item.name}', '${item.roman}')">
+          <span class="char">${item.char}</span>
+          <span class="roman">${item.roman}</span>
+          <div class="name">${item.name}</div>
+        </div>
+      `).join('');
+    }
+
+    // Рендер слов
+    function renderWords() {
+      const el = document.getElementById('wordList');
+      el.innerHTML = words.map(w => `
+        <div class="word-item">
+          <div class="word-ko">${w.ko}</div>
+          <div class="word-rom">${w.roman}</div>
+          <div class="word-ru">${w.ru}</div>
+          <button class="speak-btn" onclick="speak('${w.ko}')" title="Прослушать">🔊</button>
+        </div>
+      `).join('');
+    }
+
+    // Рендер фраз
+    function renderPhrases() {
+      const el = document.getElementById('phraseList');
+      el.innerHTML = phrases.map(p => `
+        <div class="phrase-item">
+          <div class="phrase-ko">${p.ko}</div>
+          <div class="phrase-rom">${p.roman}</div>
+          <div class="phrase-ru">${p.ru}</div>
+          <button class="speak-btn" style="margin-top:8px" onclick="speak('${p.ko}')">🔊 Прослушать</button>
+        </div>
+      `).join('');
+    }
+
+    // Навигация
+    document.querySelectorAll('nav button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+        if (btn.dataset.tab === 'quiz') startQuiz();
+      });
+    });
+
+    // Тренажёр
+    let score = 0;
+    let total = 0;
+    let current = null;
+    let answered = false;
+
+    function startQuiz() {
+      answered = false;
+      document.getElementById('nextBtn').classList.remove('show');
+      current = syllables[Math.floor(Math.random() * syllables.length)];
+      document.getElementById('quizChar').textContent = current.char;
+
+      // 4 варианта
+      let options = [current.roman];
+      while (options.length < 4) {
+        const r = syllables[Math.floor(Math.random() * syllables.length)].roman;
+        if (!options.includes(r)) options.push(r);
+      }
+      options = options.sort(() => Math.random() - 0.5);
+
+      const optsEl = document.getElementById('quizOptions');
+      optsEl.innerHTML = options.map(o =>
+        `<button onclick="checkAnswer(this, '${o}')">${o}</button>`
+      ).join('');
+    }
+
+    function checkAnswer(btn, chosen) {
+      if (answered) return;
+      answered = true;
+      total++;
+      document.getElementById('total').textContent = total;
+
+      const buttons = document.querySelectorAll('#quizOptions button');
+      buttons.forEach(b => {
+        if (b.textContent === current.roman) b.classList.add('correct');
+        else if (b === btn && chosen !== current.roman) b.classList.add('wrong');
+        b.disabled = true;
+      });
+
+      if (chosen === current.roman) {
+        score++;
+        document.getElementById('score').textContent = score;
+      }
+
+      document.getElementById('nextBtn').classList.add('show');
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', startQuiz);
+
+    // Инициализация
+    renderHangul('consonants', consonants);
+    renderHangul('vowels', vowels);
+    renderWords();
+    renderPhrases();
+  </script>
+</body>
+</html>
