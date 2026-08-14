@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Корейский — Уровень 2</title>
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --card: #1a1a22;
+      --accent: #ff6b9d;
+      --accent2: #7c5cff;
+      --text: #e8e8ed;
+      --muted: #9898a6;
+      --border: #2a2a35;
+      --success: #2ecc71;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 16px 60px;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 32px;
+      padding-top: 20px;
+    }
+
+    header h1 {
+      font-size: 1.9rem;
+      font-weight: 700;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 6px;
+    }
+
+    header p { color: var(--muted); font-size: 0.95rem; }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    .speed-control, .voice-control {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .speed-control label, .voice-control label {
+      color: var(--muted);
+      font-size: 0.9rem;
+      white-space: nowrap;
+    }
+
+    .speed-control input[type="range"] {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 150px;
+      height: 6px;
+      background: var(--border);
+      border-radius: 999px;
+      outline: none;
+      cursor: pointer;
+    }
+
+    .speed-control input[type="range"]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      cursor: pointer;
+      border: none;
+    }
+
+    .speed-value {
+      min-width: 42px;
+      text-align: center;
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.95rem;
+    }
+
+    .voice-control select {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 8px 12px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      max-width: 260px;
+      outline: none;
+    }
+
+    nav {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 32px;
+    }
+
+    nav button {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    nav button:hover, nav button.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border-color: transparent;
+      color: white;
+    }
+
+    section {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    section.active { display: block; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h2 {
+      font-size: 1.35rem;
+      margin-bottom: 8px;
+      color: var(--accent);
+    }
+
+    .hint {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+    }
+
+    /* Numbers */
+    .num-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+
+    .num-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 8px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
+
+    .num-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-2px);
+    }
+
+    .num-card .digit {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--accent2);
+      display: block;
+    }
+
+    .num-card .ko {
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin: 4px 0 2px;
+    }
+
+    .num-card .roman {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    /* Particles */
+    .particle-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .particle-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+
+    .particle-item .p-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 4px;
+    }
+
+    .particle-item .p-desc {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 10px;
+    }
+
+    .particle-item .p-examples {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .ex {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 10px 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .ex-ko { font-size: 1.1rem; font-weight: 600; }
+    .ex-ru { color: var(--muted); font-size: 0.9rem; }
+
+    .speak-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      width: 34px;
+      height: 34px;
+      border-radius: 50%;
+      cursor: pointer;
+      font-size: 0.95rem;
+      flex-shrink: 0;
+      transition: all 0.2s;
+    }
+
+    .speak-btn:hover {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    /* Words */
+    .theme-title {
+      font-size: 1.1rem;
+      color: var(--accent2);
+      margin: 22px 0 10px;
+    }
+
+    .word-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .word-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .word-item:hover { border-color: var(--accent2); }
+    .word-ko { font-size: 1.2rem; font-weight: 600; }
+    .word-rom { color: var(--muted); font-size: 0.9rem; }
+    .word-ru { color: var(--text); }
+
+    /* Sentences */
+    .sentence-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 14px;
+    }
+
+    .s-ko {
+      font-size: 1.35rem;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .s-rom {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 6px;
+    }
+
+    .s-ru { margin-bottom: 10px; }
+
+    .s-breakdown {
+      background: var(--bg);
+      border-radius: 8px;
+      padding: 10px 12px;
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .s-breakdown strong { color: var(--accent); }
+
+    /* Quiz */
+    .quiz-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 24px 18px;
+      text-align: center;
+    }
+
+    .quiz-score {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 14px;
+    }
+
+    .quiz-question {
+      font-size: 1.3rem;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .quiz-hint {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 18px;
+    }
+
+    .quiz-options {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      max-width: 380px;
+      margin: 0 auto 16px;
+    }
+
+    .quiz-options button {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 14px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+    }
+
+    .quiz-options button:hover { border-color: var(--accent2); }
+    .quiz-options button.correct {
+      background: #1a3a2a;
+      border-color: var(--success);
+      color: var(--success);
+    }
+    .quiz-options button.wrong {
+      background: #3a1a1a;
+      border-color: #e74c3c;
+      color: #e74c3c;
+    }
+
+    .next-btn {
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      border: none;
+      color: white;
+      padding: 12px 28px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 600;
+      display: none;
+    }
+
+    .next-btn.show { display: inline-block; }
+
+    footer {
+      text-align: center;
+      margin-top: 48px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    footer a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    @media (max-width: 600px) {
+      .word-item {
+        grid-template-columns: 1fr 1fr;
+        gap: 4px;
+      }
+      .word-item .speak-btn {
+        grid-column: 2;
+        justify-self: end;
+      }
+      .quiz-options { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>한국어 · Уровень 2</h1>
+      <p>Числа · Частицы · Слова · Предложения</p>
+      <div class="controls">
+        <div class="speed-control">
+          <label for="speedSlider">Скорость</label>
+          <input type="range" id="speedSlider" min="0.5" max="1.5" step="0.05" value="0.85">
+          <span class="speed-value" id="speedValue">0.85×</span>
+        </div>
+        <div class="voice-control">
+          <label for="voiceSelect">Голос</label>
+          <select id="voiceSelect">
+            <option value="">Загрузка голосов...</option>
+          </select>
+        </div>
+      </div>
+    </header>
+
+    <nav>
+      <button class="active" data-tab="numbers">Числа</button>
+      <button data-tab="particles">Частицы</button>
+      <button data-tab="words">Слова</button>
+      <button data-tab="sentences">Предложения</button>
+      <button data-tab="quiz">Тренажёр</button>
+    </nav>
+
+    <!-- ЧИСЛА -->
+    <section id="numbers" class="active">
+      <h2>Корейские числа (1–10)</h2>
+      <p class="hint">Используются для счёта предметов, возраста, часов. Нажми, чтобы услышать.</p>
+      <div class="num-grid" id="nativeNums"></div>
+
+      <h2>Сино-корейские числа (1–10)</h2>
+      <p class="hint">Для дат, денег, минут, номеров телефонов, этажей.</p>
+      <div class="num-grid" id="sinoNums"></div>
+    </section>
+
+    <!-- ЧАСТИЦЫ -->
+    <section id="particles">
+      <h2>Базовые частицы</h2>
+      <p class="hint">Частицы — это маленькие «хвостики», которые показывают роль слова в предложении.</p>
+      <div class="particle-list" id="particleList"></div>
+    </section>
+
+    <!-- СЛОВА -->
+    <section id="words">
+      <h2>Тематические слова</h2>
+      <p class="hint">Нажми 🔊, чтобы прослушать</p>
+      <div id="wordsContainer"></div>
+    </section>
+
+    <!-- ПРЕДЛОЖЕНИЯ -->
+    <section id="sentences">
+      <h2>Простые предложения</h2>
+      <p class="hint">Разбор + озвучка. Обрати внимание на частицы.</p>
+      <div id="sentenceList"></div>
+    </section>
+
+    <!-- ТРЕНАЖЁР -->
+    <section id="quiz">
+      <h2>Тренажёр</h2>
+      <p class="hint">Выбери правильный вариант</p>
+      <div class="quiz-box">
+        <div class="quiz-score">Счёт: <span id="score">0</span> / <span id="total">0</span></div>
+        <div class="quiz-question" id="quizQuestion">...</div>
+        <div class="quiz-hint" id="quizHint"></div>
+        <div class="quiz-options" id="quizOptions"></div>
+        <button class="next-btn" id="nextBtn">Следующий →</button>
+      </div>
+    </section>
+
+    <footer>
+      <a href="index.html">← Главная</a> ·
+      <a href="korean-learning.html">Уровень 1</a> ·
+      Уровень 2 ·
+      <a href="korean-level3.html">Уровень 3 →</a>
+    </footer>
+  </div>
+
+  <script>
+    // ===== ДАННЫЕ =====
+    const nativeNumbers = [
+      { n: 1, ko: '하나', roman: 'hana' },
+      { n: 2, ko: '둘', roman: 'dul' },
+      { n: 3, ko: '셋', roman: 'set' },
+      { n: 4, ko: '넷', roman: 'net' },
+      { n: 5, ko: '다섯', roman: 'daseot' },
+      { n: 6, ko: '여섯', roman: 'yeoseot' },
+      { n: 7, ko: '일곱', roman: 'ilgop' },
+      { n: 8, ko: '여덟', roman: 'yeodeol' },
+      { n: 9, ko: '아홉', roman: 'ahop' },
+      { n: 10, ko: '열', roman: 'yeol' },
+    ];
+
+    const sinoNumbers = [
+      { n: 1, ko: '일', roman: 'il' },
+      { n: 2, ko: '이', roman: 'i' },
+      { n: 3, ko: '삼', roman: 'sam' },
+      { n: 4, ko: '사', roman: 'sa' },
+      { n: 5, ko: '오', roman: 'o' },
+      { n: 6, ko: '육', roman: 'yuk' },
+      { n: 7, ko: '칠', roman: 'chil' },
+      { n: 8, ko: '팔', roman: 'pal' },
+      { n: 9, ko: '구', roman: 'gu' },
+      { n: 10, ko: '십', roman: 'sip' },
+    ];
+
+    const particles = [
+      {
+        title: '은 / 는',
+        desc: 'Тема предложения («что касается…»). 은 — после согласной, 는 — после гласной.',
+        examples: [
+          { ko: '저는 학생이에요', roman: 'jeoneun haksaengieyo', ru: 'Я — студент' },
+          { ko: '한국어는 재미있어요', roman: 'hangugeoneun jaemiisseoyo', ru: 'Корейский — интересный' },
+        ]
+      },
+      {
+        title: '이 / 가',
+        desc: 'Подлежащее (кто/что делает действие). 이 — после согласной, 가 — после гласной.',
+        examples: [
+          { ko: '친구가 왔어요', roman: 'chinguga wasseoyo', ru: 'Пришёл друг' },
+          { ko: '날씨가 좋아요', roman: 'nalssiga joayo', ru: 'Погода хорошая' },
+        ]
+      },
+      {
+        title: '을 / 를',
+        desc: 'Дополнение (на что направлено действие). 을 — после согласной, 를 — после гласной.',
+        examples: [
+          { ko: '밥을 먹어요', roman: 'babeul meogeoyo', ru: 'Ем рис' },
+          { ko: '한국어를 공부해요', roman: 'hangugeoreul gongbuhaeyo', ru: 'Изучаю корейский' },
+        ]
+      },
+      {
+        title: '에',
+        desc: 'Место назначения / время («в», «на», «к»).',
+        examples: [
+          { ko: '학교에 가요', roman: 'hakgyoe gayo', ru: 'Иду в школу' },
+          { ko: '두 시에 만나요', roman: 'du sie mannayo', ru: 'Встретимся в 2 часа' },
+        ]
+      },
+      {
+        title: '에서',
+        desc: 'Место действия («в/на» — где происходит действие).',
+        examples: [
+          { ko: '카페에서 공부해요', roman: 'kapeeseo gongbuhaeyo', ru: 'Учу в кафе' },
+          { ko: '집에서 쉬어요', roman: 'jibeseo swieoyo', ru: 'Отдыхаю дома' },
+        ]
+      },
+    ];
+
+    const wordThemes = [
+      {
+        title: 'Семья',
+        words: [
+          { ko: '가족', roman: 'gajok', ru: 'Семья' },
+          { ko: '어머니', roman: 'eomeoni', ru: 'Мама' },
+          { ko: '아버지', roman: 'abeoji', ru: 'Папа' },
+          { ko: '형', roman: 'hyeong', ru: 'Старший брат (для муж.)' },
+          { ko: '누나', roman: 'nuna', ru: 'Старшая сестра (для муж.)' },
+          { ko: '언니', roman: 'eonni', ru: 'Старшая сестра (для жен.)' },
+          { ko: '동생', roman: 'dongsaeng', ru: 'Младший брат/сестра' },
+        ]
+      },
+      {
+        title: 'Еда',
+        words: [
+          { ko: '밥', roman: 'bap', ru: 'Рис / еда' },
+          { ko: '물', roman: 'mul', ru: 'Вода' },
+          { ko: '고기', roman: 'gogi', ru: 'Мясо' },
+          { ko: '생선', roman: 'saengseon', ru: 'Рыба' },
+          { ko: '과일', roman: 'gwail', ru: 'Фрукты' },
+          { ko: '커피', roman: 'keopi', ru: 'Кофе' },
+          { ko: '김치', roman: 'gimchi', ru: 'Кимчи' },
+        ]
+      },
+      {
+        title: 'Цвета',
+        words: [
+          { ko: '빨간색', roman: 'ppalgansaek', ru: 'Красный' },
+          { ko: '파란색', roman: 'paransaek', ru: 'Синий' },
+          { ko: '노란색', roman: 'noransaek', ru: 'Жёлтый' },
+          { ko: '초록색', roman: 'choroksaek', ru: 'Зелёный' },
+          { ko: '검은색', roman: 'geomeunsaek', ru: 'Чёрный' },
+          { ko: '흰색', roman: 'huinsaek', ru: 'Белый' },
+        ]
+      },
+      {
+        title: 'Места',
+        words: [
+          { ko: '집', roman: 'jip', ru: 'Дом' },
+          { ko: '학교', roman: 'hakgyo', ru: 'Школа' },
+          { ko: '회사', roman: 'hoesa', ru: 'Компания / работа' },
+          { ko: '카페', roman: 'kape', ru: 'Кафе' },
+          { ko: '병원', roman: 'byeongwon', ru: 'Больница' },
+          { ko: '역', roman: 'yeok', ru: 'Станция' },
+        ]
+      },
+    ];
+
+    const sentences = [
+      {
+        ko: '저는 학생이에요.',
+        roman: 'jeoneun haksaengieyo.',
+        ru: 'Я студент.',
+        breakdown: '<strong>저</strong> (я) + <strong>는</strong> (тема) + <strong>학생</strong> (студент) + <strong>이에요</strong> (есть)'
+      },
+      {
+        ko: '한국어를 공부해요.',
+        roman: 'hangugeoreul gongbuhaeyo.',
+        ru: 'Я изучаю корейский.',
+        breakdown: '<strong>한국어</strong> (корейский) + <strong>를</strong> (дополнение) + <strong>공부해요</strong> (учу)'
+      },
+      {
+        ko: '친구가 카페에 가요.',
+        roman: 'chinguga kapee gayo.',
+        ru: 'Друг идёт в кафе.',
+        breakdown: '<strong>친구</strong> (друг) + <strong>가</strong> (подлежащее) + <strong>카페</strong> (кафе) + <strong>에</strong> (направление) + <strong>가요</strong> (идёт)'
+      },
+      {
+        ko: '오늘 날씨가 좋아요.',
+        roman: 'oneul nalssiga joayo.',
+        ru: 'Сегодня хорошая погода.',
+        breakdown: '<strong>오늘</strong> (сегодня) + <strong>날씨</strong> (погода) + <strong>가</strong> + <strong>좋아요</strong> (хорошая)'
+      },
+      {
+        ko: '집에서 밥을 먹어요.',
+        roman: 'jibeseo babeul meogeoyo.',
+        ru: 'Дома ем рис.',
+        breakdown: '<strong>집</strong> (дом) + <strong>에서</strong> (место действия) + <strong>밥</strong> (рис) + <strong>을</strong> + <strong>먹어요</strong> (ем)'
+      },
+      {
+        ko: '내일 두 시에 만나요.',
+        roman: 'naeil du sie mannayo.',
+        ru: 'Завтра встретимся в 2 часа.',
+        breakdown: '<strong>내일</strong> (завтра) + <strong>두 시</strong> (2 часа) + <strong>에</strong> (время) + <strong>만나요</strong> (встречаемся)'
+      },
+    ];
+
+    // Вопросы для тренажёра
+    const quizData = [
+      { q: 'Какая частица темы после гласной?', hint: '저___', options: ['는', '은', '가', '를'], answer: '는' },
+      { q: 'Какая частица подлежащего после согласной?', hint: '사람___', options: ['이', '가', '은', '을'], answer: '이' },
+      { q: 'Какая частица дополнения после гласной?', hint: '사과___', options: ['를', '을', '가', '에'], answer: '를' },
+      { q: 'Частица направления / времени?', hint: '학교___ 가요', options: ['에', '에서', '를', '는'], answer: '에' },
+      { q: 'Частица места действия?', hint: '카페___ 공부해요', options: ['에서', '에', '를', '가'], answer: '에서' },
+      { q: 'Корейское «3»?', hint: '네이тив', options: ['셋', '삼', '넷', '다섯'], answer: '셋' },
+      { q: 'Сино-корейское «7»?', hint: '', options: ['칠', '일곱', '육', '팔'], answer: '칠' },
+      { q: 'Как сказать «я студент»?', hint: '', options: ['저는 학생이에요', '제가 학생이에요', '저을 학생이에요', '저는 학생를이에요'], answer: '저는 학생이에요' },
+      { q: 'Корейское «5»?', hint: '네이тив', options: ['다섯', '오', '넷', '여섯'], answer: '다섯' },
+      { q: 'Сино-корейское «10»?', hint: '', options: ['십', '열', '구', '일'], answer: '십' },
+    ];
+
+    // ===== РЕЧЬ =====
+    let speechRate = 0.85;
+    let selectedVoice = null;
+    let selectedEnVoice = null;
+
+    function speak(text, lang = 'ko-KR') {
+      if (!window.speechSynthesis) return;
+      window.speechSynthesis.cancel();
+      const u = new SpeechSynthesisUtterance(text);
+      u.lang = lang;
+      u.rate = speechRate;
+      if (lang.startsWith('ko') && selectedVoice) u.voice = selectedVoice;
+      else if (lang.startsWith('en') && selectedEnVoice) u.voice = selectedEnVoice;
+      window.speechSynthesis.speak(u);
+    }
+
+    // Голоса
+    const voiceSelect = document.getElementById('voiceSelect');
+
+    function loadVoices() {
+      const voices = window.speechSynthesis.getVoices();
+      if (!voices.length) return;
+
+      const koVoices = voices.filter(v => v.lang.startsWith('ko'));
+      const enVoices = voices.filter(v => v.lang.startsWith('en'));
+
+      const preferred = koVoices.sort((a, b) => {
+        const score = (v) => {
+          const n = v.name.toLowerCase();
+          if (n.includes('google')) return 3;
+          if (n.includes('microsoft') || n.includes('heami') || n.includes('sunhi')) return 2;
+          return 0;
+        };
+        return score(b) - score(a);
+      });
+
+      voiceSelect.innerHTML = '';
+      if (preferred.length === 0) {
+        voiceSelect.innerHTML = '<option value="">Корейский голос не найден</option>';
+      } else {
+        preferred.forEach((v, i) => {
+          const opt = document.createElement('option');
+          opt.value = i;
+          opt.textContent = `${v.name} (${v.lang})`;
+          voiceSelect.appendChild(opt);
+        });
+        selectedVoice = preferred[0];
+      }
+
+      selectedEnVoice = enVoices.find(v => v.name.toLowerCase().includes('google'))
+                     || enVoices.find(v => v.lang === 'en-US')
+                     || enVoices[0] || null;
+    }
+
+    if (window.speechSynthesis) {
+      loadVoices();
+      window.speechSynthesis.onvoiceschanged = loadVoices;
+    }
+
+    voiceSelect.addEventListener('change', () => {
+      const voices = window.speechSynthesis.getVoices().filter(v => v.lang.startsWith('ko'));
+      const sorted = voices.sort((a, b) => {
+        const score = (v) => {
+          const n = v.name.toLowerCase();
+          if (n.includes('google')) return 3;
+          if (n.includes('microsoft') || n.includes('heami') || n.includes('sunhi')) return 2;
+          return 0;
+        };
+        return score(b) - score(a);
+      });
+      selectedVoice = sorted[voiceSelect.value] || sorted[0];
+    });
+
+    document.getElementById('speedSlider').addEventListener('input', (e) => {
+      speechRate = parseFloat(e.target.value);
+      document.getElementById('speedValue').textContent = speechRate.toFixed(2) + '×';
+    });
+
+    // ===== РЕНДЕР =====
+    function renderNumbers(id, data) {
+      document.getElementById(id).innerHTML = data.map(item => `
+        <div class="num-card" onclick="speak('${item.ko}')">
+          <span class="digit">${item.n}</span>
+          <div class="ko">${item.ko}</div>
+          <div class="roman">${item.roman}</div>
+        </div>
+      `).join('');
+    }
+
+    function renderParticles() {
+      document.getElementById('particleList').innerHTML = particles.map(p => `
+        <div class="particle-item">
+          <div class="p-title">${p.title}</div>
+          <div class="p-desc">${p.desc}</div>
+          <div class="p-examples">
+            ${p.examples.map(ex => `
+              <div class="ex">
+                <div>
+                  <div class="ex-ko">${ex.ko}</div>
+                  <div class="ex-ru">${ex.ru} · <span style="color:var(--muted)">${ex.roman}</span></div>
+                </div>
+                <button class="speak-btn" onclick="speak('${ex.ko}')">🔊</button>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function renderWords() {
+      document.getElementById('wordsContainer').innerHTML = wordThemes.map(theme => `
+        <div class="theme-title">${theme.title}</div>
+        <div class="word-list">
+          ${theme.words.map(w => `
+            <div class="word-item">
+              <div class="word-ko">${w.ko}</div>
+              <div class="word-rom">${w.roman}</div>
+              <div class="word-ru">${w.ru}</div>
+              <button class="speak-btn" onclick="speak('${w.ko}')">🔊</button>
+            </div>
+          `).join('')}
+        </div>
+      `).join('');
+    }
+
+    function renderSentences() {
+      document.getElementById('sentenceList').innerHTML = sentences.map(s => `
+        <div class="sentence-card">
+          <div class="s-ko">${s.ko}</div>
+          <div class="s-rom">${s.roman}</div>
+          <div class="s-ru">${s.ru}</div>
+          <div class="s-breakdown">${s.breakdown}</div>
+          <button class="speak-btn" style="margin-top:10px" onclick="speak('${s.ko}')">🔊 Прослушать</button>
+        </div>
+      `).join('');
+    }
+
+    // ===== ТРЕНАЖЁР =====
+    let score = 0, total = 0, currentQ = null, answered = false;
+
+    function startQuiz() {
+      answered = false;
+      document.getElementById('nextBtn').classList.remove('show');
+      currentQ = quizData[Math.floor(Math.random() * quizData.length)];
+      document.getElementById('quizQuestion').textContent = currentQ.q;
+      document.getElementById('quizHint').textContent = currentQ.hint || '';
+
+      const opts = [...currentQ.options].sort(() => Math.random() - 0.5);
+      document.getElementById('quizOptions').innerHTML = opts.map(o =>
+        `<button onclick="checkAnswer(this, '${o.replace(/'/g, "\\'")}')">${o}</button>`
+      ).join('');
+    }
+
+    function checkAnswer(btn, chosen) {
+      if (answered) return;
+      answered = true;
+      total++;
+      document.getElementById('total').textContent = total;
+
+      document.querySelectorAll('#quizOptions button').forEach(b => {
+        if (b.textContent === currentQ.answer) b.classList.add('correct');
+        else if (b === btn && chosen !== currentQ.answer) b.classList.add('wrong');
+        b.disabled = true;
+      });
+
+      if (chosen === currentQ.answer) {
+        score++;
+        document.getElementById('score').textContent = score;
+      }
+      document.getElementById('nextBtn').classList.add('show');
+    }
+
+    document.getElementById('nextBtn').addEventListener('click', startQuiz);
+
+    // ===== НАВИГАЦИЯ =====
+    document.querySelectorAll('nav button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+        document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+        if (btn.dataset.tab === 'quiz') startQuiz();
+      });
+    });
+
+    // ===== INIT =====
+    renderNumbers('nativeNums', nativeNumbers);
+    renderNumbers('sinoNums', sinoNumbers);
+    renderParticles();
+    renderWords();
+    renderSentences();
+  </script>
+</body>
+</html>

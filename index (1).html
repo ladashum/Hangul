@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>한국어 — Изучение корейского</title>
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --card: #1a1a22;
+      --accent: #ff6b9d;
+      --accent2: #7c5cff;
+      --text: #e8e8ed;
+      --muted: #9898a6;
+      --border: #2a2a35;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(255, 107, 157, 0.12) 0%, transparent 70%);
+      top: -200px;
+      right: -150px;
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      width: 500px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(124, 92, 255, 0.1) 0%, transparent 70%);
+      bottom: -150px;
+      left: -100px;
+      pointer-events: none;
+    }
+
+    .badge {
+      display: inline-block;
+      background: rgba(255, 107, 157, 0.12);
+      border: 1px solid rgba(255, 107, 157, 0.25);
+      color: var(--accent);
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      margin-bottom: 20px;
+      letter-spacing: 0.02em;
+    }
+
+    h1 {
+      font-size: clamp(2.4rem, 6vw, 3.6rem);
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent2));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      margin-bottom: 12px;
+      line-height: 1.15;
+    }
+
+    .subtitle {
+      font-size: 1.15rem;
+      color: var(--muted);
+      max-width: 420px;
+      margin: 0 auto 40px;
+    }
+
+    .levels {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+      max-width: 640px;
+      width: 100%;
+      margin-bottom: 48px;
+    }
+
+    .level-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 28px 24px;
+      text-align: left;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .level-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(255, 107, 157, 0.12);
+    }
+
+    .level-card.soon {
+      opacity: 0.55;
+      pointer-events: none;
+    }
+
+    .level-num {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--accent);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 8px;
+    }
+
+    .level-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .level-desc {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+
+    .level-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+
+    .tag {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-size: 0.75rem;
+      padding: 4px 10px;
+      border-radius: 999px;
+    }
+
+    .arrow {
+      position: absolute;
+      top: 28px;
+      right: 24px;
+      font-size: 1.2rem;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+
+    .level-card:hover .arrow {
+      color: var(--accent);
+      transform: translateX(4px);
+    }
+
+    .footer-note {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .footer-note a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    @media (max-width: 500px) {
+      .levels {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="hero">
+    <div class="badge">한국어 배우기</div>
+    <h1>Изучение<br>корейского</h1>
+    <p class="subtitle">
+      Простые интерактивные уроки с озвучкой.  
+      Начни с хангыля и двигайся дальше.
+    </p>
+
+    <div class="levels">
+      <a href="korean-learning.html" class="level-card">
+        <div class="level-num">Уровень 1</div>
+        <div class="level-title">Хангыль</div>
+        <div class="level-desc">Алфавит, базовые слова, фразы и тренажёр слогов</div>
+        <div class="level-tags">
+          <span class="tag">Согласные</span>
+          <span class="tag">Гласные</span>
+          <span class="tag">Слова</span>
+          <span class="tag">Фразы</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="korean-level2.html" class="level-card">
+        <div class="level-num">Уровень 2</div>
+        <div class="level-title">Основы</div>
+        <div class="level-desc">Числа, частицы, тематические слова и предложения</div>
+        <div class="level-tags">
+          <span class="tag">Числа</span>
+          <span class="tag">Частицы</span>
+          <span class="tag">Слова</span>
+          <span class="tag">Предложения</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+
+      <a href="korean-level3.html" class="level-card">
+        <div class="level-num">Уровень 3</div>
+        <div class="level-title">Глаголы</div>
+        <div class="level-desc">Спряжения, вежливые формы, прошедшее и будущее</div>
+        <div class="level-tags">
+          <span class="tag">Правила</span>
+          <span class="tag">Глаголы</span>
+          <span class="tag">Времена</span>
+          <span class="tag">Тренажёр</span>
+        </div>
+        <span class="arrow">→</span>
+      </a>
+    </div>
+
+    <p class="footer-note">
+      Озвучка работает через браузер · Лучше всего в Chrome
+    </p>
+  </div>
+</body>
+</html>
